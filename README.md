@@ -20,7 +20,7 @@ $ sudo gitlab-runner register
 >To get the registration token, go to Settings > CI CD > runners > registartion token				
 
 ### 1.1 Build our pipeline				
-'''
+```
 stages:
   - test
   - build
@@ -68,8 +68,38 @@ deploy_application:
        sudo su -c '
        docker ps -aq | xargs docker stop | xargs docker rm &&
        docker run -d -p8080:5000 khalil1234/python_gitlab_ci_cd:v1.0'"
-'''
+```
 
-<image2><pipeline_succeded>
+<p align="center">
+<img src="https://github.com/khalilsellamii/dind_gitlab_CI/blob/main/pipeline_succesed.png" alt="Alt text" width="1000" height="200">
+</p>  
 
 ## 2. Using Docker in Docker image with tls verification
+It’s pretty much the same thing, however, we need to change some variables and options
+
+```
+	sudo nano /etc/gitlab-runner/config.toml
+```
+
+<p align="center">
+<img src="https://github.com/khalilsellamii/dind_gitlab_CI/blob/main/image.png" alt="Alt text" width="600" height="400">
+</p>  
+> As we see, we added /certs/client as a volume in the volumes section of the runner’s configuration.
+
+We just modify the DOCKER_HOST variable to use 2376 instead of 2375.
+
+Also, wemodify the DOCKER_TLS_CERTDIR to be “/certs” and not null because this is the variable that control the dind image to use tls.
+
+```
+build_image:
+  stage: build
+  tags: 
+   - testing
+  image: docker
+  services:
+    - docker:dind
+
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_HOST: tcp://docker:2376 
+```
