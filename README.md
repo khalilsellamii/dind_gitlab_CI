@@ -111,3 +111,7 @@ build_image:
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_HOST: tcp://docker:2376 
 ```
+
+
+
+`[+]` Link to the application source code repositroy on gitlab : https://gitlab.com/khalilsellamii/gitlab-cicd-crash-course/-/blob/main/.gitlab-ci.yml?ref_type=heads
