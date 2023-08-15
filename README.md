@@ -1,23 +1,30 @@
 # This is a step by step guide to creating our first working pipeline using Gitlab CI/CD
 
+## Architecture
+
+<p align="center">
+<img src="https://github.com/khalilsellamii/dind_gitlab_CI/blob/main/azeaz.png" alt="Alt text" width="800" height="400">
+</p>  
+
 ## 1. Using Docker in Docker image without tls verification
 
-/!\ PS: we need to setup the pipeline environment to contain :
+> PS: we need to setup the pipeline environment to contain :
 
-DOCKER_HOST = tcp://docker:2375
-DOCKER_TLS_CERTDIR = ""
+DOCKER_HOST = `tcp://docker:2375`  
+DOCKER_TLS_CERTDIR = `""`
 
 ### 1.0 Setup our local gitlab runner in which our pipeline will be executed
 
+```
 $  curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | sudo bash
+```
 
 after installing the runner, we need to register it :
-
+```
 $ sudo gitlab-runner register 
-				
-<image1> <gitlab-runner_registration>
+```				
 
->To get the registration token, go to Settings > CI CD > runners > registartion token				
+> To get the registration token, go to Settings > CI CD > runners > registartion token				
 
 ### 1.1 Build our pipeline				
 ```
@@ -83,8 +90,9 @@ It’s pretty much the same thing, however, we need to change some variables and
 
 <p align="center">
 <img src="https://github.com/khalilsellamii/dind_gitlab_CI/blob/main/image.png" alt="Alt text" width="600" height="400">
-</p>  
-> As we see, we added /certs/client as a volume in the volumes section of the runner’s configuration.
+</p> 
+
+> As we see, we added `/certs/client` as a volume in the volumes section of the runner’s configuration.
 
 We just modify the DOCKER_HOST variable to use 2376 instead of 2375.
 
