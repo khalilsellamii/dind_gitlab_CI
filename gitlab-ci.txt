@@ -1,0 +1,46 @@
+stages:
+  - test
+  - build
+  - deploy
+
+run_tests:
+  stage: test
+  tags: 
+   - testing
+  image: python:3.9-slim-buster
+  before_script:
+    - apt-get update && apt-get install make
+  script:
+    - make test
+
+
+
+build_image:
+  stage: build
+  tags: 
+   - testing
+  image: docker
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: tcp://docker:2375
+  before_script:
+    - echo "before_script_checkpoint"
+    - echo "$DOCKERHUB_PASS" | docker login -u khalil1234 --password-stdin
+  script:
+    - echo "successfully connected to docker hub"
+    - docker build -t khalil1234/python_gitlab_ci_cd:v1.0 .
+    - docker push khalil1234/python_gitlab_ci_cd:v1.0
+
+deploy_application:
+  stage: deploy
+  tags: 
+   - testing
+  before_script:
+    - chmod 600 $SSH_PRIVATE_KEY
+  script:
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY khalil@23.96.89.172 "
+       sudo su -c '
+       docker ps -aq | xargs docker stop | xargs docker rm &&
+       docker run -d -p8080:5000 khalil1234/python_gitlab_ci_cd:v1.0'"
