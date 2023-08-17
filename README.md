@@ -92,6 +92,46 @@ It’s pretty much the same thing, however, we need to change some variables and
 <img src="https://github.com/khalilsellamii/dind_gitlab_CI/blob/main/image.png" alt="Alt text" width="600" height="400">
 </p> 
 
+```
+[[runners]]
+
+  name = "testing"
+
+  url = "https://gitlab.com"
+
+  id = 25893683
+
+  token = "E_M4LkDzYh8ML__ZSUJj"
+
+  token_obtained_at = 2023-08-11T12:32:47Z
+
+  token_expires_at = 0001-01-01T00:00:00Z
+
+  executor = "docker"
+
+  [runners.docker]
+
+    tls_verify = false
+
+    image = "ruby:2.7"
+
+    privileged = true
+
+    disable_entrypoint_overwrite = false
+
+    oom_kill_disable = false
+
+    disable_cache = false
+
+-   volumes = ["/cache"]
++   volumes = ["/cache","/certs/client"]
+
+    shm_size = 0
+
+
+
+
+```
 > As we see, we added `/certs/client` as a volume in the volumes section of the runner’s configuration.
 
 We just modify the DOCKER_HOST variable to use 2376 instead of 2375.
